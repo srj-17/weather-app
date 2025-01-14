@@ -58,7 +58,8 @@ form {
 .today-weather-header,
 .tomorrow-weather-header {
     font-size: 1.5rem;
-    color: hsl(from var(--primary) h s 20);
+    color: hsl(from var(--accent) h s 60);
+    font-weight: bolder;
 }
 
 .today-weather-info {
