@@ -26,7 +26,7 @@ async function processWeatherData(weatherData) {
             "Weather Condition": conditions,
             Sunrise: sunrise,
             Sunset: sunset,
-            Temperature: temperature,
+            "Temperature (°F)": temperature,
             Humidity: humidity,
             "Cloud Cover (%)": cloudCover,
         };
@@ -51,7 +51,7 @@ async function processWeatherData(weatherData) {
             "Weather Condition": conditions,
             Sunrise: sunrise,
             Sunset: sunset,
-            Temperature: temperature,
+            "Temperature (°F)": temperature,
             Humidity: humidity,
             "Cloud Cover (%)": cloudCover,
         };
