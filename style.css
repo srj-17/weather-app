@@ -6,6 +6,20 @@
 
 :root {
     --std-grid-gap: 2px;
+    --bg: #363946;
+    --accent: #d56062;
+    /*a color that can be see in any weather*/
+    --primary: #f5bb00;
+    --black: #222;
+}
+
+body {
+    background: var(--bg);
+}
+
+.header-text {
+    font-size: 2.5rem;
+    color: var(--primary);
 }
 
 .container {
@@ -19,51 +33,76 @@ form {
 
 .weather-data-container {
     display: grid;
-    grid-template-areas:
-        "weather-location weather-location"
-        "today-weather-conditions tommorow-weather-conditions";
-    grid-auto-flow: horizontal;
-    /* this should be done inside the weather data container in another container */
-    /*grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));*/
 }
 
-.weather-location {
-    font-size: 2rem;
-    grid-area: weather-location;
+.weather-data {
+    display: grid;
+    gap: var(--std-grid-gap);
+    /* this should be done inside the weather data container in another container */
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 }
 
 .today-weather-conditions {
     display: grid;
     gap: var(--std-grid-gap);
-    grid-area: today-weather-conditions;
 }
 
-.tommorow-weather-conditions {
-    grid-area: tommorow-weather-conditions;
+.tomorrow-weather-conditions {
+    display: grid;
+}
+
+.weather-location {
+    font-size: 2rem;
 }
 
 .today-weather-header,
-.tommorow-weather-header {
+.tomorrow-weather-header {
     font-size: 1.5rem;
+    color: hsl(from var(--primary) h s 20);
 }
 
 .today-weather-info {
     display: grid;
     gap: var(--std-grid-gap);
+    font-size: 1.1rem;
 }
 
 .condition-container {
     display: grid;
-    grid-auto-flow: column;
-    width: min(400px, 40vw);
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* those svgs, style them */
+.weather-data-container img {
+    padding: 20px;
+    width: 15vw;
+    height: 15vw;
 }
 
 li {
     list-style-type: none;
 }
 
-/* those svgs, style them */
-.weather-data-container img {
-    width: 20vw;
-    height: 20vw;
+input {
+    border: 2px solid hsl(from var(--primary) h s 20%);
+    border-radius: 8px;
+    background: var(--primary);
+    color: var(--black);
+}
+
+input:focus {
+    border: 2px solid var(--accent);
+}
+
+button {
+    outline: none;
+    border: 2px solid hsl(from var(--primary) h s 20%);
+    border-radius: 8px;
+    background: var(--primary);
+    padding: 2px 16px;
+    color: var(--black);
+}
+
+button:active {
+    background: hsl(from var(--primary) h s 20%);
 }

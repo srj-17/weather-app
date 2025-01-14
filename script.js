@@ -22,12 +22,12 @@ async function processWeatherData(weatherData) {
         return {
             icon: weatherIcon,
             resolvedAddress,
-            conditions,
-            sunrise,
-            sunset,
-            temperature,
-            humidity,
-            cloudCover,
+            "Weather Condition": conditions,
+            Sunrise: sunrise,
+            Sunset: sunset,
+            Temperature: temperature,
+            Humidity: humidity,
+            "Cloud Cover (%)": cloudCover,
         };
     }
 
@@ -47,12 +47,12 @@ async function processWeatherData(weatherData) {
         return {
             icon: weatherIcon,
             resolvedAddress,
-            conditions,
-            sunrise,
-            sunset,
-            temperature,
-            humidity,
-            cloudCover,
+            "Weather Condition": conditions,
+            Sunrise: sunrise,
+            Sunset: sunset,
+            Temperature: temperature,
+            Humidity: humidity,
+            "Cloud Cover (%)": cloudCover,
         };
     }
 
@@ -83,9 +83,7 @@ async function getWeatherData(location) {
 
 function displayWeatherData(location) {
     function displayTodaysWeather(conditions) {
-        const weatherDataContainer = document.querySelector(
-            ".weather-data-container",
-        );
+        const weatherDataDiv = document.querySelector(".weather-data");
         const todayWeatherConditions = document.createElement("div");
         todayWeatherConditions.classList.toggle("today-weather-conditions");
 
@@ -130,13 +128,11 @@ function displayWeatherData(location) {
         }
 
         todayWeatherConditions.appendChild(todayWeatherInfo);
-        weatherDataContainer.appendChild(todayWeatherConditions);
+        weatherDataDiv.appendChild(todayWeatherConditions);
     }
 
     function displayTomorrowsForecast(conditions) {
-        const weatherDataContainer = document.querySelector(
-            ".weather-data-container",
-        );
+        const weatherDataDiv = document.querySelector(".weather-data");
         const tomorrowWeatherConditions = document.createElement("div");
         tomorrowWeatherConditions.classList.toggle(
             "tomorrow-weather-conditions",
@@ -183,7 +179,7 @@ function displayWeatherData(location) {
         }
 
         tomorrowWeatherConditions.appendChild(tomorrowWeatherInfo);
-        weatherDataContainer.appendChild(tomorrowWeatherConditions);
+        weatherDataDiv.appendChild(tomorrowWeatherConditions);
     }
 
     // set text and background colors with the given weatherdata
@@ -216,8 +212,10 @@ function displayWeatherData(location) {
         };
         const conditionsToday = weatherData.currentConditions.icon;
         const colorTemperatureToday = colors[conditionsToday].at(0);
+        const textColorToday = colors[conditionsToday].at(1);
         const conditionsTomorrow = weatherData.tomorrowsConditions.icon;
         const colorTemperatureTomorrow = colors[conditionsTomorrow].at(0);
+        const textColorTomorrow = colors[conditionsTomorrow].at(1);
         const body = document.querySelector("body");
         const todayWeatherConditions = document.querySelector(
             ".today-weather-conditions",
@@ -225,10 +223,16 @@ function displayWeatherData(location) {
         const tomorrowWeatherConditions = document.querySelector(
             ".tomorrow-weather-conditions",
         );
+        const weatherLocation = document.querySelector(".weather-location");
 
         // change the background based on what the weather conditions (weather icons)
         // are from today to tomorrow
         body.style.background = `linear-gradient(to right, ${colorTemperatureToday}, ${colorTemperatureTomorrow})`;
+        todayWeatherConditions.style.color = `${textColorToday}`;
+        tomorrowWeatherConditions.style.color = `${textColorTomorrow}`;
+
+        // also color everything that come in the left side based on today's colors
+        weatherLocation.style.color = `${textColorToday}`;
     }
 
     getWeatherData(location).then(function (weatherData) {
@@ -248,6 +252,10 @@ function displayWeatherData(location) {
         weatherLocation.classList.toggle("weather-location");
         weatherLocation.textContent = `${weatherData.currentConditions.resolvedAddress}`;
         weatherDataContainer.appendChild(weatherLocation);
+
+        const weatherDataDiv = document.createElement("div");
+        weatherDataDiv.classList.toggle("weather-data");
+        weatherDataContainer.appendChild(weatherDataDiv);
 
         displayTodaysWeather(weatherData.currentConditions);
         displayTomorrowsForecast(weatherData.tomorrowsConditions);
