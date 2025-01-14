@@ -1,6 +1,7 @@
 const searchButton = document.querySelector("button");
 const searchInputField = document.querySelector(".search-box-container input");
 const container = document.querySelector(".container");
+const loader = document.querySelector(".loader");
 
 // param type = response object
 async function processWeatherData(weatherData) {
@@ -71,13 +72,19 @@ async function processWeatherData(weatherData) {
 }
 
 async function getWeatherData(location) {
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=Q6RAL35G5A9TH796NG49ZSSBQ`;
     try {
-        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=Q6RAL35G5A9TH796NG49ZSSBQ`;
         const weatherData = await fetch(url);
+        // throw error if error code is not in range (200 - 299)
+        if (!weatherData.ok) {
+            throw new Error(`Response status: ${weatherData.status}`);
+        }
         const processedWeatherData = await processWeatherData(weatherData);
         return processedWeatherData;
     } catch (e) {
-        console.error(new Error("Error while fetching the weather data"));
+        console.error(
+            new Error(`Error while fetching the weather data: ${e.message}`),
+        );
     }
 }
 
@@ -235,33 +242,50 @@ function displayWeatherData(location) {
         weatherLocation.style.color = `${textColorToday}`;
     }
 
-    getWeatherData(location).then(function (weatherData) {
-        const prevWeatherData = document.querySelector(
-            ".weather-data-container",
-        );
+    function toggleLoader() {
+        loader.classList.toggle("visible");
+    }
 
-        if (prevWeatherData) {
-            container.removeChild(prevWeatherData);
-        }
+    toggleLoader();
+    getWeatherData(location)
+        .then(function (weatherData) {
+            toggleLoader();
+            const prevWeatherData = document.querySelector(
+                ".weather-data-container",
+            );
 
-        const weatherDataContainer = document.createElement("div");
-        weatherDataContainer.classList.toggle("weather-data-container");
-        container.appendChild(weatherDataContainer);
+            if (prevWeatherData) {
+                container.removeChild(prevWeatherData);
+            }
 
-        const weatherLocation = document.createElement("div");
-        weatherLocation.classList.toggle("weather-location");
-        weatherLocation.textContent = `${weatherData.currentConditions.resolvedAddress}`;
-        weatherDataContainer.appendChild(weatherLocation);
+            const weatherDataContainer = document.createElement("div");
+            weatherDataContainer.classList.toggle("weather-data-container");
+            container.appendChild(weatherDataContainer);
 
-        const weatherDataDiv = document.createElement("div");
-        weatherDataDiv.classList.toggle("weather-data");
-        weatherDataContainer.appendChild(weatherDataDiv);
+            const weatherLocation = document.createElement("div");
+            weatherLocation.classList.toggle("weather-location");
+            weatherLocation.textContent = `${weatherData.currentConditions.resolvedAddress}`;
+            weatherDataContainer.appendChild(weatherLocation);
 
-        displayTodaysWeather(weatherData.currentConditions);
-        displayTomorrowsForecast(weatherData.tomorrowsConditions);
+            const weatherDataDiv = document.createElement("div");
+            weatherDataDiv.classList.toggle("weather-data");
+            weatherDataContainer.appendChild(weatherDataDiv);
 
-        setPageColors(weatherData);
-    });
+            displayTodaysWeather(weatherData.currentConditions);
+            displayTomorrowsForecast(weatherData.tomorrowsConditions);
+
+            setPageColors(weatherData);
+        })
+        .catch((error) => {
+            console.error(new Error(error.message));
+            const weatherDataContainer = document.querySelector(
+                ".weather-data-container",
+            );
+            console.log("this ran");
+            weatherDataContainer.textContent =
+                "Could not find the weather for the given location";
+            weatherDataContainer.style.color = "#fff";
+        });
 }
 
 searchButton.addEventListener("click", (event) => {
